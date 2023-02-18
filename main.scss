@@ -1,0 +1,17 @@
+$border: 1px solid #000;
+$width: 500px;
+$bg: #446444;
+$hugeText: 60px;
+$bigText: 42px;
+$smallText: 32px;
+$white: #fff;
+
+.clear { width: 100%; clear: both; }
+.card { float: left; width: $width; height: auto; background-color: $bg; border-radius: 10px; padding: 10px; }
+button { float: left; }
+.headers > div { float: left; width: $width/5; text-align: center; }
+.headers > div span { font-size: $bigText; color: #fff; font-weight: bold; }
+.column { float: left; width: $width/5; text-align: center; }
+.number { padding: 20px 0; border: $border; background-color: $white; }
+.number span { color: #000; font-size: $smallText; }
+.number span:hover { text-shadow: 0 0 5px rgba(0,0,0,0.5); }
