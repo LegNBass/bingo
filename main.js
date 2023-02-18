@@ -5197,6 +5197,39 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $author$project$Main$mkColumn = function (i) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class(
+				'column ' + $elm$core$String$fromInt(i))
+			]),
+		_List_Nil);
+};
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$mkHeaders = function (c) {
+	return A2(
+		$elm$html$Html$div,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$span,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						$elm$core$String$fromChar(c))
+					]))
+			]));
+};
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -5214,15 +5247,26 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$html$Html$span = _VirtualDom_node('span');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$core$String$foldr = _String_foldr;
+var $elm$core$String$toList = function (string) {
+	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
+};
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
+				A2(
+				$elm$html$Html$button,
+				_List_fromArray(
+					[
+						$elm$html$Html$Events$onClick($author$project$Main$Regenerate)
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Generate New Card')
+					])),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -5236,135 +5280,29 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$Attributes$class('card')
 					]),
-				_List_fromArray(
-					[
-						A2(
+				A2(
+					$elm$core$List$cons,
+					A2(
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class('headers')
 							]),
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('B')
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('I')
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('N')
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('G')
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('O')
-											]))
-									]))
-							])),
 						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('column 1')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('column 2')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('column 3')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('column 4')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('column 5')
-							]),
-						_List_Nil)
-					])),
+							$elm$core$List$map,
+							$author$project$Main$mkHeaders,
+							$elm$core$String$toList('BINGO'))),
+					A2(
+						$elm$core$List$map,
+						$author$project$Main$mkColumn,
+						A2($elm$core$List$range, 1, 5)))),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$class('temp')
 					]),
-				_List_Nil),
-				A2(
-				$elm$html$Html$button,
-				_List_fromArray(
-					[
-						$elm$html$Html$Events$onClick($author$project$Main$Regenerate)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Generate New Card')
-					]))
+				_List_Nil)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$sandbox(

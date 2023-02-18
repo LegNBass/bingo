@@ -30,24 +30,21 @@ update msg model =
     Regenerate -> model
 
 -- VIEW
+
+mkHeaders: Char -> Html msg
+mkHeaders c = div [] [ span [] [ text (String.fromChar c) ]]
+
+mkColumn: Int -> Html msg
+mkColumn i = div [ class ("column " ++ (String.fromInt i)) ] []
+
 view : Model -> Html Msg
 view model = 
   div [] [
+    button [ onClick Regenerate ] [text "Generate New Card"],
     div [ class "clear" ] [],
-    div [ class "card" ] [
-      div [ class "headers"] [
-        div [] [ span [] [text "B"] ],
-        div [] [ span [] [text "I"] ],
-        div [] [ span [] [text "N"] ],
-        div [] [ span [] [text "G"] ],
-        div [] [ span [] [text "O"] ]
-      ],
-      div [ class "column 1"] [],
-      div [ class "column 2"] [],
-      div [ class "column 3"] [],
-      div [ class "column 4"] [],
-      div [ class "column 5"] []
-    ],
-    div [class "temp" ] [],
-    button [ onClick Regenerate ] [text "Generate New Card"]
+    div [ class "card" ] (
+      (div [ class "headers"] (List.map mkHeaders (String.toList "BINGO")))
+      :: (List.map mkColumn (List.range 1 5))
+    ),
+    div [class "temp" ] []
   ]
