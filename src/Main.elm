@@ -4,22 +4,24 @@ import Browser
 import Html exposing (Html, button, div, text, span)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
+import Html.Lazy exposing (lazy)
 
 
+-- CONSTANTS
+bingo: List Char
+bingo = String.toList "BINGO"
 
 -- MAIN
-
-
 main : Program () Model Msg
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
 -- MODEL
-type alias Model = Int
+type alias Model = List String
 
 
 init : Model
-init = 0
+init = []
 
 -- UPDATE
 type Msg = Regenerate
@@ -34,8 +36,12 @@ update msg model =
 mkHeaders: Char -> Html msg
 mkHeaders c = div [] [ span [] [ text (String.fromChar c) ]]
 
-mkColumn: Int -> Html msg
-mkColumn i = div [ class ("column " ++ (String.fromInt i)) ] []
+buildBoxes: Char -> List (Html msg)
+buildBoxes c = List.range 1 5
+              |> List.map (\_ -> div [ class "number" ] [ span [] [text <| String.fromChar c] ] )
+
+mkColumn: Int -> Char-> Model -> Html msg
+mkColumn i c model = div [ class ("column " ++ (String.fromInt i)) ] (buildBoxes c)
 
 view : Model -> Html Msg
 view model = 
@@ -43,8 +49,8 @@ view model =
     button [ onClick Regenerate ] [text "Generate New Card"],
     div [ class "clear" ] [],
     div [ class "card" ] (
-      (div [ class "headers"] (List.map mkHeaders (String.toList "BINGO")))
-      :: (List.map mkColumn (List.range 1 5))
+      (div [ class "headers"] (List.map mkHeaders bingo))
+      :: (List.indexedMap (\i c -> mkColumn i c model) bingo)
     ),
     div [class "temp" ] []
   ]
