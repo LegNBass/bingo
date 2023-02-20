@@ -3,7 +3,6 @@ module Main exposing (..)
 import Browser
 import Random exposing (Generator)
 import Random.Set exposing (set)
-import Dict exposing (Dict)
 import Html exposing (Html, button, div, text, span)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
@@ -12,8 +11,11 @@ import Set exposing (Set)
 
 
 -- CONSTANTS
-bingo: List Char
-bingo = String.toList "BINGO"
+
+type BingoLetter = B | I | N | G | O
+
+bingo: List BingoLetter
+bingo = [B, I, N, G, O]
 
 -- MAIN
 main : Program () Model Msg
@@ -33,19 +35,17 @@ type alias Model = {
 generateCard: Generator Model
 generateCard = 
   let
-    genUnique: List Int -> Generator Int 
-    genUnique used = Random.int 1 75 |> Random.andThen (
-      \n -> if List.member n used then
-              genUnique used -- Tail Recursion possible in elm?
-            else
-            -- Is there such thing as a generator literal
-              (Random.int n n)
-      )
-
-    genRow: Generator (List Int)
-    genRow = Random.list 5 <| genUnique []
+    convertAndSort: Set Int -> List Int
+    convertAndSort s = List.sort <| Set.toList s
+    genRow: Int -> Int -> Generator (Set Int)
+    genRow lower upper = set 5 <| Random.int lower upper
   in 
-    Random.map5 Model genRow genRow genRow genRow genRow 
+    Random.map5 Model 
+      (Random.map convertAndSort <| genRow  1 15)
+      (Random.map convertAndSort <| genRow 16 30)
+      (Random.map convertAndSort <| genRow 31 45)
+      (Random.map convertAndSort <| genRow 46 60)
+      (Random.map convertAndSort <| genRow 61 75) 
 
 
 init : () -> (Model, Cmd Msg)
@@ -67,15 +67,30 @@ subscriptions _ =
 
 -- VIEW
 
-mkHeaders: Char -> Html msg
-mkHeaders c = div [] [ span [] [ text (String.fromChar c) ]]
+renderLetter: BingoLetter -> String
+renderLetter bl = case bl of
+    B -> "B"
+    I -> "I"
+    N -> "N"
+    G -> "G"
+    O -> "O"
 
-buildBoxes: Char -> List (Html msg)
-buildBoxes c = List.range 1 5 -- TODO: Get the number list from the model here and use them in the lambda
-              |> List.map (\_ -> div [ class "number" ] [ span [] [text <| String.fromChar c] ] )
+mkHeaders: BingoLetter -> Html msg
+mkHeaders bl = div [] [ span [] [ text (renderLetter bl) ]]
 
-mkColumn: Int -> Char-> Model -> Html msg
-mkColumn i c model = div [ class ("column " ++ (String.fromInt i)) ] (buildBoxes c)
+buildBoxes: List Int -> List (Html msg)
+buildBoxes nums = nums
+              |> List.map (\n -> div [ class "number" ] [ span [] [text <| String.fromInt n] ] )
+
+mkColumn: Int -> BingoLetter-> Model -> Html msg
+mkColumn i bl model = div [ class ("column " ++ (String.fromInt i)) ] (
+  buildBoxes ( case bl of 
+    B -> model.b
+    I -> model.i
+    N -> model.n
+    G -> model.g
+    O -> model.o
+  ))
 
 view : Model -> Html Msg
 view model = 
@@ -83,7 +98,7 @@ view model =
     button [ onClick Generate ] [text "Generate New Card"],
     div [ class "clear" ] [],
     div [ class "card" ] (
-      (div [ class "headers"] (List.map mkHeaders bingo)) :: (List.indexedMap (\i c -> mkColumn i c model) bingo)
+      (div [ class "headers"] (List.map mkHeaders bingo)) :: (List.indexedMap (\i bl -> mkColumn i bl model) bingo)
     ),
     div [class "temp" ] []
   ]
