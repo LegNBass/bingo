@@ -78,13 +78,22 @@ renderLetter bl = case bl of
 mkHeaders: BingoLetter -> Html msg
 mkHeaders bl = div [] [ span [] [ text (renderLetter bl) ]]
 
-buildBoxes: List Int -> List (Html msg)
-buildBoxes nums = nums
-              |> List.map (\n -> div [ class "number" ] [ span [] [text <| String.fromInt n] ] )
+buildBoxes: BingoLetter -> List Int -> List (Html msg)
+buildBoxes bl nums =
+  let
+    defaultDiv: Int -> Html msg
+    defaultDiv n = div [ class "number" ] [ span [] [text <| String.fromInt n] ]
+    -- The "N" column should have a FREE space in the middle
+    inner: Int -> Int -> Html msg
+    inner i n = case bl of
+      N -> if i == 2 then div [ class "number" ] [ span [] [text "FREE" ] ] else defaultDiv n
+      _ -> defaultDiv n
+  in
+    List.indexedMap inner nums
 
 mkColumn: Int -> BingoLetter-> Model -> Html msg
 mkColumn i bl model = div [ class ("column " ++ (String.fromInt i)) ] (
-  buildBoxes ( case bl of 
+  buildBoxes bl (case bl of 
     B -> model.b
     I -> model.i
     N -> model.n
