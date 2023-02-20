@@ -2,3 +2,7 @@
 elm-stuff
 # elm-repl generated files
 repl-temp-*
+# Compiled Stuff
+*.js
+*.css
+*.css.map
