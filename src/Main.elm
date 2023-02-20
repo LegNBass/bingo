@@ -28,24 +28,24 @@ type alias Model = {
     i : (List Int),
     n : (List Int),
     g : (List Int),
-    o : (List Int) 
+    o : (List Int)
   }
 
 
 generateCard: Generator Model
-generateCard = 
+generateCard =
   let
-    convertAndSort: Set Int -> List Int
-    convertAndSort s = List.sort <| Set.toList s
     genRow: Int -> Int -> Generator (Set Int)
     genRow lower upper = set 5 <| Random.int lower upper
-  in 
-    Random.map5 Model 
-      (Random.map convertAndSort <| genRow  1 15)
-      (Random.map convertAndSort <| genRow 16 30)
-      (Random.map convertAndSort <| genRow 31 45)
-      (Random.map convertAndSort <| genRow 46 60)
-      (Random.map convertAndSort <| genRow 61 75) 
+    convertAndSort: Int -> Int -> Generator (List Int)
+    convertAndSort lower upper = Random.map (\s -> List.sort <| Set.toList s) <| genRow lower upper
+  in
+    Random.map5 Model
+      (convertAndSort  1 15)
+      (convertAndSort 16 30)
+      (convertAndSort 31 45)
+      (convertAndSort 46 60)
+      (convertAndSort 61 75)
 
 
 init : () -> (Model, Cmd Msg)
@@ -57,8 +57,8 @@ type Msg = Generate | NewCard Model
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Generate -> (model, Random.generate NewCard generateCard) --TODO: generate a new card
-    NewCard ll -> (ll, Cmd.none) --TODO: Add newly random numbers to the model
+    Generate -> (model, Random.generate NewCard generateCard)
+    NewCard ll -> (ll, Cmd.none)
 
 -- SUBSCRIPTIONS
 subscriptions : Model -> Sub Msg
@@ -66,7 +66,6 @@ subscriptions _ =
     Sub.none
 
 -- VIEW
-
 renderLetter: BingoLetter -> String
 renderLetter bl = case bl of
     B -> "B"
@@ -93,7 +92,7 @@ buildBoxes bl nums =
 
 mkColumn: Int -> BingoLetter-> Model -> Html msg
 mkColumn i bl model = div [ class ("column " ++ (String.fromInt i)) ] (
-  buildBoxes bl (case bl of 
+  buildBoxes bl (case bl of
     B -> model.b
     I -> model.i
     N -> model.n
@@ -102,7 +101,7 @@ mkColumn i bl model = div [ class ("column " ++ (String.fromInt i)) ] (
   ))
 
 view : Model -> Html Msg
-view model = 
+view model =
   div [] [
     button [ onClick Generate ] [text "Generate New Card"],
     div [ class "clear" ] [],
