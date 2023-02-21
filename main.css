@@ -1,0 +1,53 @@
+.clear {
+  width: 100%;
+  clear: both;
+}
+
+.card {
+  float: left;
+  width: 500px;
+  height: auto;
+  background-color: #DFFF00;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+button {
+  float: left;
+  background-color: aqua;
+}
+
+.headers > div {
+  float: left;
+  width: 100px;
+  text-align: center;
+}
+
+.headers > div span {
+  font-size: 42px;
+  color: #fc8eac;
+  font-weight: bold;
+}
+
+.column {
+  float: left;
+  width: 100px;
+  text-align: center;
+}
+
+.number {
+  padding: 20px 0;
+  border: 1px solid #000;
+  background-color: #fc8eac;
+}
+
+.number span {
+  color: #fff;
+  font-size: 32px;
+}
+
+.number span:hover {
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/*# sourceMappingURL=main.css.map */
